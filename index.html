@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザーリスト</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+</head>
+
+<body class="bg-teal-50 max-w-md w-full mx-auto">
+
+    <div class="bg-teal-300 border border-white rounded-lg m-4">
+        <input id="nameInput" type ="text" placeholder ="アカウント名を入力"
+        class="border border-white p-4 m-4 rounded-lg ">
+        <button id="button" class="bg-amber-950 p-4 m-4 rounded-lg text-white font-bold">読み込む</button>                                                             
+    </div>
+    
+    <div id ="UserList" class="bg-teal-300 border border-white rounded-lg p-4"></div>
+<script>
+
+    async function LoadUsers() {
+        const Btn = document.getElementById("button"); 
+        const UserList = document.getElementById("UserList");
+
+        try {  
+                const username = document.getElementById("nameInput").value.trim();
+                const response = await fetch (`https://api.github.com/users/${username}`);            
+                console.log(response); 
+
+                if (!response.ok){
+                    throw new Error ("ユーザーが見つかりませんでした");
+                
+                }
+                const data = await response.json();
+                console.log(data);
+
+                UserList.textContent = "";
+
+                    const card = document.createElement("div");
+                    card.className ="bg-teal-300 border border-white";
+
+                    const name = document.createElement("h1");
+                    name.className ="text-3xl text-white font-bold p-2";
+                    name.textContent = data.name;
+
+                    const avatar = document.createElement("img");
+                    avatar.className ="w-full";
+                    avatar.src = data.avatar_url;
+
+                    const bio = document.createElement("p");
+                    bio.className ="";
+                    bio.textContent = data.bio;
+
+                    const followers = document.createElement("p");
+                    followers.className ="";
+                    followers.textContent = data.followers;
+                    
+                    card.appendChild(name);
+                    card.appendChild(avatar);
+                    card.appendChild(bio);
+                    card.appendChild(followers);
+                    UserList.appendChild(card);
+                }
+
+            catch (error){
+                UserList.textContent = "データの取得に失敗しました";
+            }
+
+        };
+        button.addEventListener("click", LoadUsers);
+
+    
+</script>
+</body>
+</html>
